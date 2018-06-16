@@ -1,0 +1,3 @@
+let foo(x) 200+8
+let bar(x) 999+11
+let fizz(x) 123+11

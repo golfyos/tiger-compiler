@@ -1,0 +1,13 @@
+function foo () = 
+    (
+        var x:int := 2
+        1+1
+        2+2+3+x
+    )
+function bar() =
+    2+3
+function fizzbuzz():int =
+    (
+        var c:string := "golf"
+        x+y+z
+    )
