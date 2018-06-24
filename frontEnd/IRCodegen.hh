@@ -27,6 +27,7 @@ namespace Tiger {
 		Value* genIR(Expr* node);
 		Value* genIR(BinaryOperator* node);
 		Value* genIR(IntegerLiteral* node);
+		Value* genIR(Identifier* node);
 		Function* genIR(FunctionAST* node);
 		Function* genIR(PrototypeAST* node);
 

@@ -202,6 +202,7 @@
 																	std::cout << "ID with type\n";
 																	driver.add_id($2.c_str(),$4.c_str());
 																}
+					| VAR ID COLON TYPE_ID						{ driver.add_id($2.c_str(),$4.c_str()); }
 
 					;
 	

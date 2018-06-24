@@ -5,12 +5,21 @@
 
 namespace Tiger {
 
+
 	IRCodegen::IRCodegen() {
-		TheModule = llvm::make_unique<Module>("my cool jit", TheContext);
+		TheModule = llvm::make_unique<Module>("Tiger", TheContext);
 	}
 
 	IRCodegen::~IRCodegen()
 	{
+	}
+
+	/// CreateEntryBlockAlloca - Create an alloca instruction in the entry block of
+	/// the function.  This is used for mutable variables etc.
+	static AllocaInst *CreateEntryBlockAlloca(Function *TheFunction,const std::string &VarName) 
+	{
+		IRBuilder<> TmpB(&TheFunction->getEntryBlock(),TheFunction->getEntryBlock().begin());
+		return TmpB.CreateAlloca(Type::getDoubleTy(TheContext), 0,VarName.c_str());
 	}
 
 	void IRCodegen::print()
@@ -52,6 +61,19 @@ namespace Tiger {
 		return ConstantFP::get(TheContext, APFloat((float)node->getVal()));
 	}
 
+	Value* IRCodegen::genIR(Identifier* node)
+	{
+		Function *TheFunction = Builder.GetInsertBlock()->getParent();
+		
+		// Create an alloca for this variable.
+		AllocaInst *Alloca = CreateEntryBlockAlloca(TheFunction, node->getIdentifier());
+		Value* cur = Builder.CreateLoad(Alloca);
+
+		// Store the initial value into the alloca.
+		return Builder.CreateStore(cur,Alloca);
+	}
+	
+
 	Function* IRCodegen::genIR(FunctionAST* node){
 		Function *TheFunction = TheModule->getFunction(node->Proto->getName());
 		if (!TheFunction)
@@ -66,25 +88,22 @@ namespace Tiger {
 
 		// Record the function arguments in the NamedValues map.
 		NamedValues.clear();
-		for (auto &Arg : TheFunction->args())
+		for (auto &Arg : TheFunction->args()){
 			NamedValues[Arg.getName()] = &Arg;
+		}
 
-		bool checker = false;
 		for(int i=0;i<(int)node->Body.size();i++){
-			if (Value *RetVal = node->Body.at(i)->accept(this)) {
-				// Finish off the function.
-				Builder.CreateRet(RetVal);
-
-				// Validate the generated code, checking for consistency.
-				verifyFunction(*TheFunction);
-
+			Value *val = node->Body.at(i)->accept(this);
+			if (val!=nullptr) {
 				if(i==((int)node->Body.size())-1){
-					checker = true;
+					// Finish off the function.
+					Builder.CreateRetVoid();
+					// Validate the generated code, checking for consistency.
+					verifyFunction(*TheFunction);
+					return TheFunction;
 				}
 			}
 		}
-		if(checker == true)
-			return TheFunction;
 		
 
 		// Error reading body, remove function.
@@ -94,9 +113,9 @@ namespace Tiger {
 
 	Function* IRCodegen::genIR(PrototypeAST* node)
 	{
-		std::vector<Type *> Doubles(node->Args.size(), Type::getDoubleTy(TheContext));
+		std::vector<Type *> Void(node->Args.size(), Type::getVoidTy(TheContext));
 		FunctionType *FT =
-			FunctionType::get(Type::getDoubleTy(TheContext), Doubles, false);
+			FunctionType::get(Type::getVoidTy(TheContext), Void, false);
 
 		Function *F =
 			Function::Create(FT, Function::ExternalLinkage, node->Name, TheModule.get());

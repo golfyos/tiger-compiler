@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/frontEnd/def/tiger",
-            "args": ["${workspaceFolder}/frontEnd/test.tig"],
+            "args": ["${workspaceFolder}/frontEnd/Text.txt"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],

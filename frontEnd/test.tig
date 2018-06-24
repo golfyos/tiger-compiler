@@ -5,7 +5,7 @@ function foo () =
         2+2+3+g
     )
 function bar() =
-    9+8
+        1+5
 function fizzbuzz():int =
     (
         a+b+c

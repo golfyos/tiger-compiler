@@ -146,7 +146,7 @@ void Tiger::Tiger_Driver::add_function_def(std::string id,std::string returnType
 	PrototypeAST* proto = new PrototypeAST(id,std::move(ArgNames),returnType);
 	FunctionAST* fn = new FunctionAST(std::move(proto),std::move(bodyStmt));
 	// FunctionAST* fn = new FunctionAST(std::move(proto),std::move(expr));
-	addNode(fn);
+	// addNode(fn);
 	addAST(fn);
 	while(!bodyStmt.empty()){
 		Stmt* t = bodyStmt.back();
@@ -165,7 +165,6 @@ void Tiger::Tiger_Driver::addToBodyStmt(){
 
 	if(countStmt == 0){
 		while(!expStack.empty()){
-
 			temp.push(expStack.top());
 			expStack.pop();
 			countStmt ++;
