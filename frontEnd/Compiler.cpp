@@ -17,8 +17,6 @@ int main(const int argc, const char **argv)
 		// driver.getAST()->accept(&reader);
 
 
-
-
 		/* Visitor visits each tree */
 
 		// std::vector<Tiger::Stmt*> trees = driver.getASTList();
@@ -29,15 +27,13 @@ int main(const int argc, const char **argv)
 		// }
 
 
-
-		Tiger::IRCodegen* visitor;
+		/* IRcodegen */
+		Tiger::IRCodegen* visitor = new Tiger::IRCodegen();
 		std::vector<Tiger::Stmt*> trees = driver.getASTList();
-		std::cout << trees.size() << " << size \n"; 
 		for(int i=0;i<(int)trees.size();i++){
-		 	visitor = new Tiger::IRCodegen();
 		 	trees.at(i)->accept(visitor);
-		 	visitor->print();
 		}
+		visitor->print();
 
 	}
 	else

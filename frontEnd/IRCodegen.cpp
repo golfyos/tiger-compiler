@@ -7,7 +7,7 @@ namespace Tiger {
 
 
 	IRCodegen::IRCodegen() {
-		TheModule = llvm::make_unique<Module>("Tiger", TheContext);
+		TheModule = llvm::make_unique<Module>("Tiger_code.tig", TheContext);
 	}
 
 	IRCodegen::~IRCodegen()

@@ -1,0 +1,16 @@
+function foo () = 
+(
+    var x:int
+    var y:int
+    x+5-4
+)
+function bar () =
+(
+    var z:int
+    z*5-4
+)
+function bazz() =
+(
+    var yy:int
+    yy+2
+)
